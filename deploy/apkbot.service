@@ -1,0 +1,25 @@
+[Unit]
+Description=Codemagic -> Slack -> Telegram APK bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Adjust if you deploy somewhere other than /opt/apkbot
+WorkingDirectory=/opt/apkbot
+EnvironmentFile=/opt/apkbot/.env
+ExecStart=/opt/apkbot/.venv/bin/python /opt/apkbot/bot.py
+Restart=always
+RestartSec=5
+# Run as a dedicated unprivileged user (created by setup.sh)
+User=apkbot
+Group=apkbot
+
+# Hardening (safe defaults; bot only needs network + a temp dir)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
